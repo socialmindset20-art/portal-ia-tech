@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4f8ef7" stop-opacity="0.85"/>
+      <stop offset="0.55" stop-color="#8b5cf6" stop-opacity="0.70"/>
+      <stop offset="1" stop-color="#06b6d4" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="rg" cx="78%" cy="38%" r="55%">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.24"/>
+      <stop offset="0.45" stop-color="#4f8ef7" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#0a0a0f" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity="0.04" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feColorMatrix in="b" type="matrix"
+        values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 0.65 0" result="g"/>
+      <feMerge>
+        <feMergeNode in="g"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="#0a0a0f"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#rg)"/>
+
+  <path d="M90 430C240 310 380 330 520 250C670 165 800 165 910 210C1020 255 1090 350 1120 420"
+        fill="none" stroke="url(#g1)" stroke-opacity="0.55" stroke-width="3" filter="url(#glow)"/>
+
+  <g fill="none" stroke="url(#g1)" stroke-opacity="0.70" stroke-width="2" filter="url(#glow)">
+    <path d="M820 162c34 8 64 26 86 52"/>
+    <path d="M770 214c44 6 83 25 113 55"/>
+    <path d="M740 280c52 2 99 24 135 62"/>
+    <path d="M760 355c48 -2 90 12 126 42"/>
+  </g>
+
+  <g fill="#0a0a0f" stroke="url(#g1)" stroke-opacity="0.9" stroke-width="2" filter="url(#glow)">
+    <circle cx="830" cy="165" r="7"/>
+    <circle cx="915" cy="218" r="6"/>
+    <circle cx="765" cy="214" r="6"/>
+    <circle cx="905" cy="270" r="7"/>
+    <circle cx="742" cy="282" r="6"/>
+    <circle cx="875" cy="342" r="7"/>
+    <circle cx="770" cy="355" r="6"/>
+    <circle cx="980" cy="392" r="7"/>
+  </g>
+
+  <g font-family="Space Grotesk, Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
+    <text x="96" y="250" font-size="64" font-weight="700" fill="#e2e8f0">TechAI_Lab</text>
+    <text x="96" y="300" font-size="22" font-weight="600" fill="#e2e8f0" fill-opacity="0.88">
+      Inteligencia Artificial " Ciencia " Engenharia
+    </text>
+  </g>
+
+  <g font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
+    <text x="96" y="364" font-size="18" font-weight="500" fill="#64748b">
+      Conteudo tecnico, fronteiras de inovacao e fundamentos cientificos.
+    </text>
+  </g>
+</svg>
