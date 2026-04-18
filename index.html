@@ -210,10 +210,102 @@
       font-weight: 500;
     }
 
+    /* ===== FUNDAMENTOS CIENTIFICOS ===== */
+    .fundamentals-section {
+      padding: 5rem 0 0;
+    }
+    .fundamentals-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.25rem;
+    }
+    .fundamentals-card {
+      position: relative;
+      overflow: hidden;
+      padding: 1.75rem;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+    .fundamentals-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.14), transparent 45%);
+      pointer-events: none;
+    }
+    .fundamentals-head {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .fundamentals-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(79, 142, 247, 0.18);
+      background: linear-gradient(180deg, rgba(79, 142, 247, 0.10), rgba(139, 92, 246, 0.06)), var(--bg3);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 18px 36px -28px rgba(79, 142, 247, 0.6);
+      flex: 0 0 auto;
+    }
+    .fundamentals-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--text);
+      opacity: 0.92;
+    }
+    .fundamentals-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.35rem;
+      line-height: 1.2;
+      margin: 0;
+    }
+    .fundamentals-kicker {
+      position: relative;
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+    .fundamentals-points {
+      position: relative;
+      list-style: none;
+      display: grid;
+      gap: 0.85rem;
+      margin: 0;
+      padding: 0;
+    }
+    .fundamentals-points li {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+    .fundamentals-points .bullet {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 0.35rem;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      box-shadow: 0 0 14px rgba(139, 92, 246, 0.35);
+      flex: 0 0 auto;
+    }
+    .fundamentals-points strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
     @media (max-width: 640px) {
       .container { padding: 0 1.25rem; }
       .hero { padding: 6rem 1.25rem 4rem; }
       .innovation-card { min-height: auto; }
+      .fundamentals-grid { grid-template-columns: 1fr; }
     }
 
     .btn-read {
@@ -338,6 +430,70 @@
             Novos processadores neuromorficos buscam reproduzir dinamicas de neuronios e sinapses para reduzir consumo de energia e ampliar desempenho em inferencia local, robotica e sensores inteligentes.
           </p>
           <div class="innovation-signal">Sinal estrategico: hardware especializado tende a definir a proxima vantagem competitiva.</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="fundamentals-section" id="fundamentos-cientificos">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <div class="section-tag">Fundamentos Cientificos</div>
+          <h2 class="section-title">Rigor teorico. Execucao de alto desempenho.</h2>
+        </div>
+        <p class="section-description">
+          Sistemas de IA de ponta nao nascem de intuicao: eles emergem de bases matematicas formais e de referencias biologicas que orientam arquiteturas, aprendizado e eficiencia.
+        </p>
+      </div>
+
+      <div class="fundamentals-grid">
+        <article class="fundamentals-card">
+          <div class="fundamentals-head">
+            <div class="fundamentals-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19h16" />
+                <path d="M7 17V7" />
+                <path d="M17 17V7" />
+                <path d="M8.5 7h7" />
+                <path d="M10 11h4" />
+              </svg>
+            </div>
+            <h3 class="fundamentals-title">Matematica Pura</h3>
+          </div>
+
+          <p class="fundamentals-kicker">
+            A diferenca entre um modelo impressionante e um sistema confiavel esta na disciplina: prova, limite e consistencia.
+          </p>
+
+          <ul class="fundamentals-points">
+            <li><span class="bullet"></span><span><strong>Logica</strong> estabelece criterios de validade, reduz ambiguidade e sustenta raciocinio verificavel em cadeias de decisao.</span></li>
+            <li><span class="bullet"></span><span><strong>Calculo</strong> e a linguagem da otimizacao: gradientes, convergencia e estabilidade definem eficiencia no treinamento e previsibilidade na inferencia.</span></li>
+          </ul>
+        </article>
+
+        <article class="fundamentals-card">
+          <div class="fundamentals-head">
+            <div class="fundamentals-icon" aria-hidden="true" style="border-color: rgba(139, 92, 246, 0.22);">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 3a3 3 0 0 0 0 6" />
+                <path d="M15 3a3 3 0 0 1 0 6" />
+                <path d="M8 9c-2.5 1-4 3.3-4 6a6 6 0 0 0 12 0c0-2.7-1.5-5-4-6" />
+                <path d="M12 12v2" />
+                <path d="M10 14h4" />
+              </svg>
+            </div>
+            <h3 class="fundamentals-title">Biologia Computacional</h3>
+          </div>
+
+          <p class="fundamentals-kicker">
+            Performance real nao e apenas escala: e arquitetura eficiente, robusta e inspirada em principios naturais.
+          </p>
+
+          <ul class="fundamentals-points">
+            <li><span class="bullet"></span><span><strong>Neurociencia</strong> informa mecanicas de percepcao, memoria e aprendizado, servindo como referencia para arquiteturas e mecanismos de atencao.</span></li>
+            <li><span class="bullet"></span><span><strong>Eficiencia energetica</strong> e um requisito: o futuro da IA depende de modelos e hardware que aprendem e inferem com custo controlado.</span></li>
+          </ul>
         </article>
       </div>
     </div>
