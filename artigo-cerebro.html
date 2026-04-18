@@ -4,6 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Redes Neurais vs. Cérebro Humano — TechAI_Lab</title>
+
+  <meta name="description" content="Comparacao tecnica entre sinapses biologicas e redes neurais: pesos, aprendizado, eficiencia energetica e o que a neurociencia ainda ensina para IA." />
+
+  <meta property="og:site_name" content="TechAI_Lab" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Redes Neurais vs. Cerebro Humano | TechAI_Lab" />
+  <meta property="og:description" content="Pesos, sinapses e aprendizado: onde a analogia funciona, onde falha e como isso orienta arquitetura e eficiencia." />
+  <meta property="og:image" content="og-techai-lab.svg" />
+  <meta property="og:image:type" content="image/svg+xml" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Redes Neurais vs. Cerebro Humano | TechAI_Lab" />
+  <meta name="twitter:description" content="Uma analise objetiva entre neurociencia e deep learning: pesos, sinapses e eficiencia." />
+  <meta name="twitter:image" content="og-techai-lab.svg" />
   
   <!-- Fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,6 +48,63 @@
       font-family: 'Inter', sans-serif;
       line-height: 1.8;
       overflow-x: hidden;
+    }
+
+    /* ===== READING PROGRESS + TO TOP ===== */
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      z-index: 220;
+    }
+    .reading-progress__bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--purple));
+      box-shadow: 0 0 18px rgba(6, 182, 212, 0.45);
+      transition: width 0.08s linear;
+    }
+
+    .to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 210;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(6, 182, 212, 0.22);
+      background: rgba(15, 15, 26, 0.82);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 650;
+      text-decoration: none;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+    }
+    .to-top:hover {
+      border-color: rgba(79, 142, 247, 0.45);
+    }
+    .to-top.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .to-top svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--text);
+      opacity: 0.92;
     }
 
     .container { max-width: 850px; margin: 0 auto; padding: 4rem 2rem; }
@@ -143,6 +216,17 @@
   </style>
 </head>
 <body>
+  <div class="reading-progress" aria-hidden="true">
+    <div class="reading-progress__bar" id="readingProgressBar"></div>
+  </div>
+
+  <button class="to-top" id="toTopBtn" type="button" aria-label="Voltar ao topo">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 19V6" />
+      <path d="M7 11l5-5 5 5" />
+    </svg>
+    Topo
+  </button>
 
   <div class="container">
     <a href="index.html" class="back-link">← Voltar para a Home</a>
@@ -223,6 +307,33 @@
       © 2026 TechAI_Lab - Conhecimento é Performance.
     </footer>
   </div>
+
+  <script>
+    const progressBar = document.getElementById('readingProgressBar');
+    const toTopBtn = document.getElementById('toTopBtn');
+
+    function updateReadingUI() {
+      const doc = document.documentElement;
+      const scrollTop = doc.scrollTop || document.body.scrollTop;
+      const scrollHeight = doc.scrollHeight || document.body.scrollHeight;
+      const clientHeight = doc.clientHeight || window.innerHeight;
+      const scrollable = Math.max(1, scrollHeight - clientHeight);
+      const progress = Math.min(100, Math.max(0, (scrollTop / scrollable) * 100));
+
+      progressBar.style.width = progress.toFixed(2) + '%';
+
+      if (scrollTop > 420) toTopBtn.classList.add('is-visible');
+      else toTopBtn.classList.remove('is-visible');
+    }
+
+    window.addEventListener('scroll', updateReadingUI, { passive: true });
+    window.addEventListener('resize', updateReadingUI);
+    updateReadingUI();
+
+    toTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
 
 </body>
 </html>
