@@ -3,1068 +3,201 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Como a Lógica Matemática do Iezzi constrói IAs — TechAI_Lab</title>
-  <meta name="description" content="Descubra como os fundamentos da lógica proposicional do livro Fundamentos de Matemática Elementar de Iezzi estão na base dos sistemas de inteligência artificial modernos." />
+  <title>Lógica Proposicional: O DNA da IA — TechAI_Lab</title>
+  
+  <!-- Fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ── RESET & TOKENS ─────────────────────────────────────── */
+    /* ===== VARIÁVEIS & RESET ===== */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    
     :root {
-      --bg:        #080810;
-      --bg2:       #0d0d1c;
-      --bg3:       #111120;
-      --surface:   #161628;
-      --border:    #1f2040;
-      --border2:   #2a2b50;
-      --blue:      #5b9cf6;
-      --blue-dim:  rgba(91,156,246,0.12);
-      --blue-glow: rgba(91,156,246,0.07);
-      --purple:    #9b72f0;
-      --purple-dim:rgba(155,114,240,0.12);
-      --cyan:      #22d3ee;
-      --cyan-dim:  rgba(34,211,238,0.10);
-      --text:      #dde3f0;
-      --text2:     #8892aa;
-      --text3:     #50566e;
-      --serif:     'Lora', Georgia, serif;
-      --sans:      'DM Sans', sans-serif;
-      --mono:      'DM Mono', monospace;
-      --r-sm:      6px;
-      --r-md:      10px;
-      --r-lg:      16px;
+      --bg:      #0a0a0f;
+      --bg2:     #0f0f1a;
+      --blue:    #4f8ef7;
+      --purple:  #8b5cf6;
+      --text:    #e2e8f0;
+      --muted:   #94a3b8;
+      --border:  #1e2a3a;
     }
-    html { scroll-behavior: smooth; }
+
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: var(--sans);
-      font-size: 16px;
-      line-height: 1.7;
-      min-height: 100vh;
-    }
-    a { color: var(--blue); text-decoration: none; transition: opacity .2s; }
-    a:hover { opacity: .75; }
-
-    /* ── NAVBAR ─────────────────────────────────────────────── */
-    nav {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(8,8,16,.88);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
-    }
-    .nav-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 58px;
-    }
-    .logo {
-      font-family: var(--sans); font-size: 18px; font-weight: 500;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .logo-icon {
-      width: 26px; height: 26px;
-      background: linear-gradient(135deg, var(--blue), var(--purple));
-      border-radius: 5px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; color: #fff;
-    }
-    .logo-text {
-      background: linear-gradient(135deg, var(--blue), var(--purple));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .nav-back {
-      font-size: 13px; color: var(--text2);
-      display: flex; align-items: center; gap: 6px;
-      transition: color .2s;
-    }
-    .nav-back:hover { color: var(--text); opacity: 1; }
-    .nav-back svg { width: 14px; height: 14px; }
-
-    /* ── HERO DO ARTIGO ─────────────────────────────────────── */
-    .article-hero {
-      max-width: 780px; margin: 0 auto;
-      padding: 4rem 2rem 0;
-    }
-    .breadcrumb {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 12px; color: var(--text3);
-      margin-bottom: 1.5rem;
-    }
-    .breadcrumb span { color: var(--text3); }
-    .breadcrumb a { color: var(--text3); font-size: 12px; }
-    .breadcrumb a:hover { color: var(--blue); opacity: 1; }
-    .crumb-sep { color: var(--text3); }
-
-    .article-tags {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      margin-bottom: 1.5rem;
-    }
-    .tag {
-      font-size: 11px; font-weight: 500; padding: 3px 10px;
-      border-radius: 100px; letter-spacing: .02em;
-    }
-    .tag-blue   { background: var(--blue-dim);   color: var(--blue);   border: 1px solid rgba(91,156,246,.2); }
-    .tag-purple { background: var(--purple-dim);  color: var(--purple); border: 1px solid rgba(155,114,240,.2); }
-    .tag-cyan   { background: var(--cyan-dim);    color: var(--cyan);   border: 1px solid rgba(34,211,238,.2); }
-
-    .article-title {
-      font-family: var(--serif);
-      font-size: clamp(1.9rem, 4.5vw, 3rem);
-      font-weight: 600;
-      line-height: 1.2;
-      letter-spacing: -.02em;
-      color: #eef2ff;
-      margin-bottom: 1.25rem;
-    }
-    .article-subtitle {
-      font-size: 1.1rem;
-      color: var(--text2);
-      line-height: 1.65;
-      max-width: 640px;
-      margin-bottom: 2rem;
-      font-weight: 300;
-    }
-
-    .article-meta {
-      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-      padding: 1rem 0;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 3rem;
-    }
-    .meta-author { display: flex; align-items: center; gap: 10px; }
-    .meta-avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--blue), var(--purple));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 600; color: #fff;
-    }
-    .meta-name  { font-size: 14px; font-weight: 500; color: var(--text); }
-    .meta-role  { font-size: 12px; color: var(--text3); }
-    .meta-sep   { width: 1px; height: 28px; background: var(--border2); }
-    .meta-info  { font-size: 13px; color: var(--text3); }
-    .meta-info strong { color: var(--text2); font-weight: 500; }
-
-    /* ── CAPA / VISUAL DE DESTAQUE ──────────────────────────── */
-    .article-cover {
-      max-width: 780px; margin: 0 auto 3.5rem;
-      padding: 0 2rem;
-    }
-    .cover-visual {
-      width: 100%;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      padding: 2.5rem 2rem;
-      display: flex; flex-direction: column; align-items: center;
-      gap: 1.5rem; overflow: hidden; position: relative;
-    }
-    .cover-formula-row {
-      display: flex; align-items: center; justify-content: center;
-      gap: 1rem; flex-wrap: wrap;
-    }
-    .formula-box {
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: var(--r-md);
-      padding: .6rem 1.1rem;
-      font-family: var(--mono);
-      font-size: clamp(13px, 2vw, 17px);
-      color: var(--blue);
-      letter-spacing: .04em;
-    }
-    .formula-arrow {
-      color: var(--purple); font-size: 20px;
-    }
-    .formula-box.result { color: var(--cyan); }
-    .cover-caption {
-      font-size: 13px; color: var(--text3); text-align: center;
-      font-style: italic;
-    }
-    .cover-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-      width: 100%; background: var(--border);
-      border: 1px solid var(--border); border-radius: var(--r-md);
-      overflow: hidden;
-    }
-    .cg-cell {
-      background: var(--bg3);
-      padding: .75rem;
-      text-align: center;
-      font-family: var(--mono); font-size: 12px;
-    }
-    .cg-cell .val { font-size: 15px; font-weight: 500; margin-bottom: 2px; }
-    .val-t { color: #4ade80; }
-    .val-f { color: #f87171; }
-    .cg-cell .lbl { color: var(--text3); font-size: 11px; }
-
-    /* ── CORPO DO ARTIGO ────────────────────────────────────── */
-    .article-body {
-      max-width: 680px; margin: 0 auto;
-      padding: 0 2rem 5rem;
-    }
-
-    /* Tipografia ─────────── */
-    .article-body h2 {
-      font-family: var(--serif);
-      font-size: clamp(1.3rem, 3vw, 1.75rem);
-      font-weight: 600;
-      color: #eef2ff;
-      margin: 3rem 0 1rem;
-      line-height: 1.25;
-      letter-spacing: -.01em;
-    }
-    .article-body h3 {
-      font-family: var(--sans);
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: #c7d0e8;
-      margin: 2rem 0 .75rem;
-      letter-spacing: .01em;
-    }
-    .article-body p {
-      font-size: 1rem;
-      color: var(--text2);
+      font-family: 'Inter', sans-serif;
       line-height: 1.8;
-      margin-bottom: 1.25rem;
-    }
-    .article-body p strong {
-      color: var(--text);
-      font-weight: 500;
-    }
-    .article-body p em { color: #a0aec0; font-style: italic; }
-
-    /* Blocos de código ───── */
-    .code-block {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-      overflow: hidden;
-      margin: 1.5rem 0;
-    }
-    .code-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: .5rem 1rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-    }
-    .code-lang {
-      font-size: 11px; font-weight: 500; color: var(--text3);
-      text-transform: uppercase; letter-spacing: .08em;
-    }
-    .code-dots { display: flex; gap: 5px; }
-    .dot {
-      width: 10px; height: 10px; border-radius: 50%;
-    }
-    .d-red    { background: #f87171; }
-    .d-amber  { background: #fbbf24; }
-    .d-green  { background: #4ade80; }
-    pre {
-      padding: 1.1rem 1.25rem;
-      overflow-x: auto;
-      font-family: var(--mono);
-      font-size: 13.5px;
-      line-height: 1.7;
-      color: #c8d3f0;
-    }
-    .kw  { color: #9b72f0; }   /* keyword   */
-    .fn  { color: #5b9cf6; }   /* function  */
-    .str { color: #4ade80; }   /* string    */
-    .cm  { color: #3a4060; }   /* comment   */
-    .num { color: #f5a623; }   /* number    */
-    .op  { color: #22d3ee; }   /* operator  */
-    .var { color: #e2e8f0; }   /* variable  */
-
-    /* Callout / Destaque ─── */
-    .callout {
-      border-left: 3px solid var(--blue);
-      background: var(--blue-glow);
-      border-radius: 0 var(--r-md) var(--r-md) 0;
-      padding: 1rem 1.25rem;
-      margin: 1.5rem 0;
-    }
-    .callout.purple { border-color: var(--purple); background: rgba(155,114,240,.06); }
-    .callout.cyan   { border-color: var(--cyan);   background: rgba(34,211,238,.06); }
-    .callout-label {
-      font-size: 11px; font-weight: 500; text-transform: uppercase;
-      letter-spacing: .08em; color: var(--blue); margin-bottom: .4rem;
-    }
-    .callout.purple .callout-label { color: var(--purple); }
-    .callout.cyan   .callout-label { color: var(--cyan); }
-    .callout p { margin: 0; font-size: 14px; color: #9aa3be; }
-    .callout p strong { color: var(--text); }
-
-    /* Tabela verdade ──────── */
-    .truth-table-wrap {
-      overflow-x: auto;
-      margin: 1.5rem 0;
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-family: var(--mono);
-      font-size: 13px;
-    }
-    thead tr { background: var(--surface); }
-    th {
-      padding: .65rem 1.1rem;
-      text-align: center;
-      color: var(--text3);
-      font-size: 11px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-      border-bottom: 1px solid var(--border);
-    }
-    td {
-      padding: .6rem 1.1rem;
-      text-align: center;
-      color: var(--text2);
-      border-bottom: 1px solid var(--border);
-    }
-    tbody tr:last-child td { border-bottom: none; }
-    tbody tr:nth-child(even) { background: rgba(255,255,255,.018); }
-    .tv { color: #4ade80; font-weight: 500; }
-    .tf { color: #f87171; font-weight: 500; }
-    .th-blue { color: var(--blue); }
-
-    /* Separador ──────────── */
-    .section-divider {
-      display: flex; align-items: center; gap: 1rem;
-      margin: 3rem 0;
-    }
-    .section-divider::before,
-    .section-divider::after {
-      content: ''; flex: 1;
-      height: 1px; background: var(--border);
-    }
-    .section-divider span {
-      font-family: var(--mono); font-size: 12px; color: var(--text3);
-      white-space: nowrap;
+      overflow-x: hidden;
     }
 
-    /* Diagrama de fluxo ──── */
-    .flow-diagram {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      padding: 1.75rem 1.5rem;
-      margin: 1.5rem 0;
-      display: flex;
-      flex-direction: column;
+    .container { max-width: 850px; margin: 0 auto; padding: 4rem 2rem; }
+
+    /* ===== CABEÇALHO DO ARTIGO ===== */
+    .back-link {
+      color: var(--blue);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
       align-items: center;
-      gap: .75rem;
+      gap: 8px;
+      margin-bottom: 3rem;
+      transition: transform 0.2s;
     }
-    .flow-row {
-      display: flex; align-items: center; justify-content: center;
-      gap: .75rem; flex-wrap: wrap;
-    }
-    .flow-node {
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: var(--r-md);
-      padding: .55rem 1rem;
-      font-size: 13px;
-      font-family: var(--mono);
-      color: var(--text);
-      text-align: center;
-      min-width: 110px;
-    }
-    .flow-node.blue   { border-color: rgba(91,156,246,.4);  color: var(--blue);   background: var(--blue-dim); }
-    .flow-node.purple { border-color: rgba(155,114,240,.4); color: var(--purple); background: var(--purple-dim); }
-    .flow-node.cyan   { border-color: rgba(34,211,238,.4);  color: var(--cyan);   background: var(--cyan-dim); }
-    .flow-node.green  { border-color: rgba(74,222,128,.3);  color: #4ade80;       background: rgba(74,222,128,.08); }
-    .flow-node.red    { border-color: rgba(248,113,113,.3); color: #f87171;       background: rgba(248,113,113,.08); }
-    .flow-arrow { color: var(--text3); font-size: 16px; }
-    .flow-label {
-      font-size: 11px; color: var(--text3); text-align: center;
-      margin-top: .25rem; font-style: italic;
-    }
+    .back-link:hover { transform: translateX(-5px); }
 
-    /* Citação ─────────────── */
-    blockquote {
-      border: 1px solid var(--border2);
-      border-radius: var(--r-md);
-      padding: 1.25rem 1.5rem;
-      margin: 1.5rem 0;
-      background: var(--surface);
-      position: relative;
-    }
-    blockquote::before {
-      content: '"';
-      font-family: var(--serif);
-      font-size: 4rem;
-      color: var(--border2);
-      line-height: 0;
-      position: absolute;
-      top: 1.8rem; left: 1rem;
-    }
-    blockquote p {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: .95rem;
-      color: #8892aa;
-      padding-left: 1.5rem;
-      margin: 0;
-    }
-    blockquote cite {
-      display: block;
+    .article-tag {
+      color: var(--purple);
       font-size: 12px;
-      color: var(--text3);
-      margin-top: .75rem;
-      padding-left: 1.5rem;
-      font-style: normal;
-    }
-
-    /* Inline code ─────────── */
-    code {
-      font-family: var(--mono);
-      font-size: .85em;
-      background: rgba(91,156,246,.12);
-      color: #7eb3fa;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    pre code {
-      background: transparent;
-      color: inherit;
-      padding: 0;
-      font-size: inherit;
-    }
-
-    /* Grid de conceitos ───── */
-    .concept-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
-      margin: 1.5rem 0;
-    }
-    .concept-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-      padding: 1rem;
-      transition: border-color .2s;
-    }
-    .concept-card:hover { border-color: var(--border2); }
-    .concept-icon {
-      width: 32px; height: 32px; border-radius: 7px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 15px; margin-bottom: .65rem;
-    }
-    .concept-card h4 {
-      font-size: 13px; font-weight: 500; color: var(--text);
-      margin-bottom: .3rem;
-    }
-    .concept-card p {
-      font-size: 12px; color: var(--text3);
-      line-height: 1.55; margin: 0;
-    }
-
-    /* Autor / Bio ─────────── */
-    .author-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      padding: 1.5rem;
-      margin-top: 3rem;
-      display: flex; gap: 1.25rem; align-items: flex-start;
-    }
-    .author-avatar {
-      width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
-      background: linear-gradient(135deg, var(--blue), var(--purple));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 600; color: #fff;
-    }
-    .author-name { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
-    .author-role { font-size: 12px; color: var(--text3); margin-bottom: .6rem; }
-    .author-bio  { font-size: 13px; color: var(--text2); line-height: 1.6; margin: 0; }
-
-    /* Artigos relacionados ── */
-    .related-section { margin-top: 3.5rem; }
-    .related-section h3 {
-      font-family: var(--sans);
-      font-size: 14px; font-weight: 500;
-      color: var(--text3);
-      text-transform: uppercase; letter-spacing: .08em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
       margin-bottom: 1rem;
     }
-    .related-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-    }
-    .related-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--r-md);
-      padding: 1rem 1.1rem;
-      transition: border-color .2s, transform .2s;
-      cursor: pointer;
-    }
-    .related-card:hover { border-color: var(--blue); transform: translateY(-2px); }
-    .related-tag { font-size: 11px; color: var(--blue); margin-bottom: .4rem; }
-    .related-title { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.4; }
 
-    /* Progresso de leitura ── */
-    .progress-bar {
-      position: fixed; top: 0; left: 0; z-index: 200;
-      height: 2px;
-      background: linear-gradient(90deg, var(--blue), var(--purple));
-      width: 0%;
-      transition: width .1s linear;
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    /* Rodapé ────────────────── */
-    footer {
+    .meta {
+      display: flex;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    /* ===== CONTEÚDO ===== */
+    h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      margin: 3rem 0 1.5rem;
+      color: #fff;
+    }
+
+    p { margin-bottom: 1.5rem; font-size: 1.15rem; color: var(--muted); }
+
+    strong { color: #fff; font-weight: 600; }
+
+    .highlight-box {
       background: var(--bg2);
-      border-top: 1px solid var(--border);
+      border-left: 4px solid var(--purple);
       padding: 2rem;
-      text-align: center;
-      font-size: 13px;
-      color: var(--text3);
+      margin: 2.5rem 0;
+      border-radius: 0 16px 16px 0;
     }
-    footer a { color: var(--text3); font-size: 13px; }
-    footer a:hover { color: var(--blue); opacity: 1; }
 
-    /* Responsivo ─────────────── */
-    @media (max-width: 640px) {
-      .article-hero, .article-cover { padding-left: 1.25rem; padding-right: 1.25rem; }
-      .article-body { padding-left: 1.25rem; padding-right: 1.25rem; }
-      .cover-formula-row { gap: .5rem; }
-      .author-card { flex-direction: column; }
-      .meta-sep { display: none; }
+    code {
+      background: #1e2a3a;
+      color: var(--blue);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.95em;
+    }
+
+    .logic-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      background: var(--bg2);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .logic-table th, .logic-table td {
+      padding: 1rem;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .logic-table th { background: var(--border); color: var(--blue); }
+
+    footer {
+      text-align: center;
+      padding: 5rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Barra de progresso -->
-  <div class="progress-bar" id="progress"></div>
-
-  <!-- ── NAVBAR ───────────────────────────────────────────── -->
-  <nav>
-    <div class="nav-inner">
-      <a href="index.html" class="logo">
-        <div class="logo-icon">T</div>
-        <span class="logo-text">TechAI_Lab</span>
-      </a>
-      <a href="index.html#artigos" class="nav-back">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M10 3L5 8l5 5"/>
-        </svg>
-        Voltar aos artigos
-      </a>
-    </div>
-  </nav>
-
-  <!-- ── HERO DO ARTIGO ───────────────────────────────────── -->
-  <header class="article-hero">
-    <div class="breadcrumb">
-      <a href="index.html">Início</a>
-      <span class="crumb-sep">/</span>
-      <a href="#">Fundamentos</a>
-      <span class="crumb-sep">/</span>
-      <span>Lógica Matemática & IA</span>
+  <div class="container">
+    <a href="index.html" class="back-link">← Voltar para a Home</a>
+    
+    <div class="article-tag">Matemática & Computação</div>
+    <h1>Se p → q, então a IA decide: O poder da Lógica Proposicional</h1>
+    
+    <div class="meta">
+      <span>📅 18 de Abril, 2026</span>
+      <span>⏱️ 8 min de leitura</span>
+      <span>✍️ Por TechAI_Lab Team</span>
     </div>
 
-    <div class="article-tags">
-      <span class="tag tag-blue">Lógica Matemática</span>
-      <span class="tag tag-purple">Fundamentos de IA</span>
-      <span class="tag tag-cyan">Redes Neurais</span>
+    <p>Muitos acreditam que a Inteligência Artificial é uma "caixa preta" mágica, capaz de pensar como um ser humano por puro instinto digital. No entanto, ao abrirmos o capô dos algoritmos mais avançados do mundo, encontramos os fundamentos da matemática clássica que você estuda em livros como o de <strong>Gelson Iezzi</strong>.</p>
+
+    <p>A <strong>Lógica Proposicional</strong> não é apenas uma matéria de escola; ela é o sistema operacional da inteligência. Sem ela, não haveria inferência, não haveria filtragem de dados e, certamente, não haveria IA.</p>
+
+    <div class="highlight-box">
+      <strong>O Conceito Fundamental:</strong> A implicação lógica <code>p → q</code> (se p, então q) é a unidade básica de qualquer tomada de decisão automatizada.
     </div>
 
-    <h1 class="article-title">
-      Como a Lógica Matemática do Iezzi constrói Inteligências Artificiais
-    </h1>
+    <h2>1. A Anatomia da Decisão</h2>
+    <p>Em um sistema de IA, as variáveis <code>p</code> e <code>q</code> deixam de ser apenas letras e passam a ser dados reais. Imagine um sistema de visão computacional de um carro autônomo:</p>
+    <ul>
+      <p><code>p</code>: O sensor detecta um objeto vermelho de formato octogonal.</p>
+      <p><code>q</code>: O sistema deve acionar os freios (Comando STOP).</p>
+    </ul>
+    <p>A relação <code>p → q</code> garante que, se a premissa for verdadeira, a conclusão <strong>deve</strong> ser executada. Se a IA falha nessa lógica, o sistema colapsa.</p>
 
-    <p class="article-subtitle">
-      Os mesmos operadores lógicos que você decorou no ensino médio — <em>conjunção, disjunção, implicação</em> — são a gramática silenciosa que governa decisões em modelos de IA. Uma viagem do livro à máquina.
-    </p>
+    <h2>2. A Tabela-Verdade no Processamento de Dados</h2>
+    <p>Engenheiros de IA utilizam a tabela-verdade para otimizar o custo computacional. Veja a estrutura da implicação que estudamos na lógica matemática:</p>
 
-    <div class="article-meta">
-      <div class="meta-author">
-        <div class="meta-avatar">AM</div>
-        <div>
-          <div class="meta-name">Ana Melo</div>
-          <div class="meta-role">Pesquisadora em IA · TechAI_Lab</div>
-        </div>
-      </div>
-      <div class="meta-sep"></div>
-      <div class="meta-info">
-        <strong>18 abr 2026</strong>
-      </div>
-      <div class="meta-sep"></div>
-      <div class="meta-info"><strong>12 min</strong> de leitura</div>
-      <div class="meta-sep"></div>
-      <div class="meta-info"><strong>Intermediário</strong></div>
+    <table class="logic-table">
+      <thead>
+        <tr>
+          <th>p</th>
+          <th>q</th>
+          <th>p → q</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>V</td><td>V</td><td>V</td></tr>
+        <tr><td>V</td><td>F</td><td>F</td></tr>
+        <tr><td>F</td><td>V</td><td>V</td></tr>
+        <tr><td>F</td><td>F</td><td>V</td></tr>
+      </tbody>
+    </table>
+
+    <p>O que a IA aprende com isso? Ela aprende que a única situação inaceitável é ter uma premissa verdadeira (<code>p</code>) levando a uma conclusão falsa (<code>q</code>). Isso é o que chamamos de <strong>Erro de Predição</strong>.</p>
+
+    <h2>3. Equivalência Lógica e Eficiência (O Hack do Iezzi)</h2>
+    <p>No Volume 1 de <em>Fundamentos de Matemática Elementar</em>, aprendemos que <code>(p → q) ≡ (¬q → ¬p)</code>. Isso é a <strong>Contrapositiva</strong>.</p>
+    <p>Na computação de alta performance, isso é usado para economizar energia (ATP digital). Às vezes, é muito mais rápido para uma IA verificar se a conclusão é falsa (<code>¬q</code>) para descartar a premissa (<code>¬p</code>) do que processar todos os dados de entrada. Isso reduz a latência e permite que modelos como o GPT respondam em milissegundos.</p>
+
+    <div class="highlight-box" style="border-left-color: var(--blue);">
+      <strong>Conexão com o Futuro:</strong> As Redes Neurais modernas são, essencialmente, bilhões de "portas lógicas" encadeadas que realizam essas operações em uma escala que o cérebro humano mal consegue imaginar.
     </div>
-  </header>
 
-  <!-- ── VISUAL DE CAPA ────────────────────────────────────── -->
-  <div class="article-cover">
-    <div class="cover-visual">
-      <div class="cover-formula-row">
-        <div class="formula-box">p = entrada</div>
-        <div class="formula-arrow">→</div>
-        <div class="formula-box">q = decisão</div>
-        <div class="formula-arrow" style="color:var(--cyan)">⊢</div>
-        <div class="formula-box result">IA infere</div>
-      </div>
+    <h2>Conclusão: O Atleta da Mente</h2>
+    <p>Se você quer operar "a mil por hora" no mundo da tecnologia, pare de procurar atalhos e domine a base. A matemática do Ensino Médio é o diferencial entre quem apenas usa a IA e quem <strong>constrói</strong> a IA.</p>
+    
+    <p><strong>Próximo passo:</strong> Da próxima vez que resolver um exercício de conjuntos ou lógica, lembre-se: você está escrevendo o código da próxima revolução industrial.</p>
 
-      <div class="cover-grid">
-        <div class="cg-cell">
-          <div class="val val-t">V</div>
-          <div class="lbl">p = ativo</div>
-        </div>
-        <div class="cg-cell">
-          <div class="val val-t">V</div>
-          <div class="lbl">q = ativo</div>
-        </div>
-        <div class="cg-cell">
-          <div class="val val-t">V</div>
-          <div class="lbl">p → q</div>
-        </div>
-        <div class="cg-cell">
-          <div class="val val-t">V</div>
-          <div class="lbl">p = ativo</div>
-        </div>
-        <div class="cg-cell">
-          <div class="val val-f">F</div>
-          <div class="lbl">q = inativo</div>
-        </div>
-        <div class="cg-cell">
-          <div class="val val-f">F</div>
-          <div class="lbl">p → q</div>
-        </div>
-        <div class="cg-cell">
-          <div class="val val-f">F</div>
-          <div class="lbl">p = inativo</div>
-        </div>
-        <div class="cg-cell">
-          <div class="val val-t">V</div>
-          <div class="lbl">q = ativo</div>
-        </div>
-        <div class="cg-cell">
-          <div class="val val-t">V</div>
-          <div class="lbl">p → q</div>
-        </div>
-      </div>
-
-      <p class="cover-caption">Tabela-verdade da implicação <code>p → q</code> mapeada para estados de uma rede neural</p>
-    </div>
+    <footer>
+      © 2026 TechAI_Lab - Conhecimento é a maior vantagem competitiva.
+    </footer>
   </div>
-
-  <!-- ── CORPO DO ARTIGO ──────────────────────────────────── -->
-  <article class="article-body">
-
-    <p>
-      Abrir o volume 1 do <strong>Fundamentos de Matemática Elementar</strong>, de Iezzi, Murakami e Dolce, e encontrar lógica proposicional na primeira parte pode parecer, à primeira vista, um exercício puramente abstrato. Proposições, conectivos, tabelas-verdade — qual o sentido prático disso tudo? A resposta, que poucos professores de ensino médio explicitam, é contundente: <strong>esse formalismo é exatamente o substrato sobre o qual engenheiros de IA constroem sistemas que tomam decisões</strong>.
-    </p>
-
-    <p>
-      Este artigo traça uma linha direta entre os conceitos do Iezzi e os mecanismos internos de redes neurais, árvores de decisão e sistemas especialistas modernos. Você vai perceber que a distância entre a sala de aula e o laboratório de IA é menor do que parece.
-    </p>
-
-    <div class="section-divider"><span>// 01 · proposições e variáveis</span></div>
-
-    <h2>Proposições: as variáveis booleanas da IA</h2>
-
-    <p>
-      O Iezzi define uma <strong>proposição</strong> como qualquer enunciado declarativo que pode assumir exatamente um dos dois valores: <em>verdadeiro</em> ou <em>falso</em>. Simples, certo? Agora observe o que um neurônio artificial faz: recebe sinais de entrada, aplica uma função e decide se "dispara" (1) ou não (0).
-    </p>
-
-    <div class="callout">
-      <div class="callout-label">Paralelo direto</div>
-      <p>
-        Uma proposição <code>p</code> do Iezzi equivale a uma <strong>variável booleana</strong> em código. O neurônio de McCulloch-Pitts (1943), precursor de toda IA moderna, foi projetado explicitamente sobre lógica proposicional.
-      </p>
-    </div>
-
-    <p>
-      Em Python, variáveis booleanas que representam proposições são o pão de cada dia de qualquer pipeline de machine learning:
-    </p>
-
-    <div class="code-block">
-      <div class="code-header">
-        <span class="code-lang">Python</span>
-        <div class="code-dots">
-          <div class="dot d-red"></div><div class="dot d-amber"></div><div class="dot d-green"></div>
-        </div>
-      </div>
-      <pre><span class="cm"># Proposições como variáveis booleanas</span>
-<span class="var">p</span> <span class="op">=</span> confianca_do_modelo <span class="op">></span> <span class="num">0.85</span>   <span class="cm"># "o modelo está confiante"</span>
-<span class="var">q</span> <span class="op">=</span> entrada_valida <span class="op">==</span> <span class="kw">True</span>          <span class="cm"># "a entrada é válida"</span>
-<span class="var">r</span> <span class="op">=</span> usuario_autenticado                <span class="cm"># "o usuário está autenticado"</span>
-
-<span class="cm"># Conjunção (p ∧ q): só responde se ambas forem verdadeiras</span>
-<span class="kw">if</span> p <span class="kw">and</span> q:
-    modelo.<span class="fn">responder</span>()</pre>
-    </div>
-
-    <div class="section-divider"><span>// 02 · conectivos lógicos</span></div>
-
-    <h2>Os conectivos do Iezzi como operadores de decisão</h2>
-
-    <p>
-      O capítulo de lógica do Iezzi apresenta cinco conectivos fundamentais. Cada um deles vive, em alguma forma, dentro de um sistema de IA:
-    </p>
-
-    <div class="concept-grid">
-      <div class="concept-card">
-        <div class="concept-icon" style="background:rgba(91,156,246,.15)">∧</div>
-        <h4>Conjunção (E)</h4>
-        <p>Verdadeiro só se <em>todas</em> as premissas são verdadeiras. Base do neurônio AND lógico.</p>
-      </div>
-      <div class="concept-card">
-        <div class="concept-icon" style="background:rgba(155,114,240,.15)">∨</div>
-        <h4>Disjunção (OU)</h4>
-        <p>Verdadeiro se <em>ao menos uma</em> premissa é verdadeira. Neurônio OR e função ReLU.</p>
-      </div>
-      <div class="concept-card">
-        <div class="concept-icon" style="background:rgba(34,211,238,.15)">¬</div>
-        <h4>Negação (NÃO)</h4>
-        <p>Inverte o valor lógico. Fundamental em regularização e dropout em redes neurais.</p>
-      </div>
-      <div class="concept-card">
-        <div class="concept-icon" style="background:rgba(74,222,128,.15)">→</div>
-        <h4>Implicação (SE...ENTÃO)</h4>
-        <p>O conectivo mais poderoso. Base de sistemas especialistas e regras de produção.</p>
-      </div>
-      <div class="concept-card">
-        <div class="concept-icon" style="background:rgba(248,113,113,.15)">↔</div>
-        <h4>Bicondicional (SSE)</h4>
-        <p>Verdadeiro quando ambos têm o mesmo valor. Usado em avaliações de equivalência semântica.</p>
-      </div>
-    </div>
-
-    <h3>A tabela-verdade completa da implicação</h3>
-
-    <p>
-      A implicação <code>p → q</code> é o conectivo mais contraintuitivo do Iezzi — e o mais importante para a IA. Sua tabela-verdade:
-    </p>
-
-    <div class="truth-table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th class="th-blue">p</th>
-            <th class="th-blue">q</th>
-            <th>p → q</th>
-            <th>Interpretação em IA</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="tv">V</span></td>
-            <td><span class="tv">V</span></td>
-            <td><span class="tv">V</span></td>
-            <td style="font-family:var(--sans);color:var(--text3);font-size:12px;text-align:left">Confiança alta → resposta correta ✓</td>
-          </tr>
-          <tr>
-            <td><span class="tv">V</span></td>
-            <td><span class="tf">F</span></td>
-            <td><span class="tf">F</span></td>
-            <td style="font-family:var(--sans);color:var(--text3);font-size:12px;text-align:left">Confiança alta → resposta errada ✗ (falha)</td>
-          </tr>
-          <tr>
-            <td><span class="tf">F</span></td>
-            <td><span class="tv">V</span></td>
-            <td><span class="tv">V</span></td>
-            <td style="font-family:var(--sans);color:var(--text3);font-size:12px;text-align:left">Confiança baixa → resposta correta (sorte)</td>
-          </tr>
-          <tr>
-            <td><span class="tf">F</span></td>
-            <td><span class="tf">F</span></td>
-            <td><span class="tv">V</span></td>
-            <td style="font-family:var(--sans);color:var(--text3);font-size:12px;text-align:left">Confiança baixa → resposta errada (consistente)</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <p>
-      Repare na linha 3: quando <code>p</code> é falso, a implicação é <strong>sempre verdadeira</strong>, independente de <code>q</code>. No contexto de IA, isso significa que um modelo que <em>sabe que não sabe</em> não está "mentindo" ao abstendo-se — ele está sendo logicamente coerente. É a base do conceito de <strong>abstention classifiers</strong> em aprendizado de máquina.
-    </p>
-
-    <div class="section-divider"><span>// 03 · do papel ao código</span></div>
-
-    <h2>De Modus Ponens às redes neurais</h2>
-
-    <p>
-      O Iezzi introduz as <strong>leis de inferência</strong> como formas válidas de raciocínio. A mais famosa é o <em>Modus Ponens</em>:
-    </p>
-
-    <blockquote>
-      <p>Se p implica q, e p é verdadeiro, então q é verdadeiro.</p>
-      <cite>— Iezzi, Fundamentos de Matemática Elementar, Vol. 1 — adaptado</cite>
-    </blockquote>
-
-    <p>
-      Formalmente: <code>(p → q) ∧ p ⊢ q</code>. Isso não é apenas filosofia: é o mecanismo de inferência de todo sistema especialista já construído, do MYCIN (1970s) ao GPT (2020s). Veja como isso se materializa numa árvore de decisão:
-    </p>
-
-    <div class="flow-diagram">
-      <div class="flow-row">
-        <div class="flow-node blue">p: temperatura > 38°C?</div>
-      </div>
-      <div class="flow-row">
-        <div class="flow-arrow">↙</div>
-        <div style="width:80px"></div>
-        <div class="flow-arrow">↘</div>
-      </div>
-      <div class="flow-row" style="gap:3rem">
-        <div class="flow-node green">SIM (V)</div>
-        <div class="flow-node red">NÃO (F)</div>
-      </div>
-      <div class="flow-row" style="gap:3rem">
-        <div class="flow-arrow">↓</div>
-        <div class="flow-arrow">↓</div>
-      </div>
-      <div class="flow-row" style="gap:3rem">
-        <div class="flow-node purple">q: aplicar protocolo febre</div>
-        <div class="flow-node" style="color:var(--text3)">q: monitorar paciente</div>
-      </div>
-      <p class="flow-label">Modus Ponens em uma árvore de decisão médica — p → q executado pelo nó da árvore</p>
-    </div>
-
-    <p>
-      Cada nó de uma árvore de decisão é uma proposição. Cada aresta é uma implicação. E a travessia do nó raiz à folha é uma cadeia de Modus Ponens — exatamente o que o Iezzi chama de <strong>prova formal</strong>.
-    </p>
-
-    <div class="section-divider"><span>// 04 · neurônios e tabelas-verdade</span></div>
-
-    <h2>O neurônio de McCulloch-Pitts: lógica com pesos</h2>
-
-    <p>
-      Em 1943, Warren McCulloch e Walter Pitts publicaram o artigo fundador das redes neurais artificiais. O modelo deles era explicitamente baseado em lógica proposicional: um neurônio recebe proposições binárias, aplica pesos e dispara se a soma ultrapassar um limiar.
-    </p>
-
-    <div class="callout purple">
-      <div class="callout-label">Conceito-chave</div>
-      <p>
-        Um neurônio artificial com função de ativação degrau é uma <strong>porta lógica ponderada</strong>. Ajustando os pesos, você implementa AND, OR ou NOT — os mesmos conectivos do Iezzi.
-      </p>
-    </div>
-
-    <div class="code-block">
-      <div class="code-header">
-        <span class="code-lang">Python · Neurônio lógico</span>
-        <div class="code-dots">
-          <div class="dot d-red"></div><div class="dot d-amber"></div><div class="dot d-green"></div>
-        </div>
-      </div>
-      <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
-
-<span class="kw">def</span> <span class="fn">neuronio_logico</span>(entradas, pesos, limiar):
-    <span class="str">"""
-    Neurônio de McCulloch-Pitts.
-    Implementa qualquer conectivo do Iezzi via pesos.
-    """</span>
-    soma_ponderada <span class="op">=</span> np.<span class="fn">dot</span>(entradas, pesos)
-    <span class="kw">return</span> <span class="num">1</span> <span class="kw">if</span> soma_ponderada <span class="op">>=</span> limiar <span class="kw">else</span> <span class="num">0</span>
-
-<span class="cm"># Implementando AND lógico (p ∧ q)</span>
-<span class="cm"># Ambas entradas precisam ser 1 para disparar</span>
-pesos_and  <span class="op">=</span> [<span class="num">1</span>, <span class="num">1</span>]
-limiar_and <span class="op">=</span> <span class="num">2</span>
-
-<span class="cm"># Implementando OR lógico (p ∨ q)</span>
-<span class="cm"># Qualquer entrada 1 já dispara</span>
-pesos_or  <span class="op">=</span> [<span class="num">1</span>, <span class="num">1</span>]
-limiar_or <span class="op">=</span> <span class="num">1</span>
-
-<span class="cm"># Teste: p=V, q=F → AND=F, OR=V</span>
-p, q <span class="op">=</span> <span class="num">1</span>, <span class="num">0</span>
-<span class="fn">print</span>(<span class="str">f"AND: {<span class="fn">neuronio_logico</span>([p,q], pesos_and, limiar_and)}"</span>)  <span class="cm"># 0 (F)</span>
-<span class="fn">print</span>(<span class="str">f"OR:  {<span class="fn">neuronio_logico</span>([p,q], pesos_or,  limiar_or)}"</span>)   <span class="cm"># 1 (V)</span></pre>
-    </div>
-
-    <p>
-      O treinamento de uma rede neural — via <em>backpropagation</em> — é, em última análise, um processo de ajuste de pesos para que a rede implemente a função lógica mais adequada aos dados. Você está, metaforicamente, <strong>ensinando a rede qual tabela-verdade ela deve seguir</strong>.
-    </p>
-
-    <div class="section-divider"><span>// 05 · sistemas especialistas</span></div>
-
-    <h2>Sistemas especialistas: o Iezzi virou código de produção</h2>
-
-    <p>
-      Antes do deep learning dominar a IA, os <strong>sistemas especialistas</strong> reinavam. Eles operavam com <em>bases de regras</em> escritas exatamente no formato da lógica proposicional do Iezzi: <code>SE condição ENTÃO ação</code>. O MYCIN, sistema de diagnóstico médico do MIT, tinha mais de 600 regras nesse formato.
-    </p>
-
-    <div class="code-block">
-      <div class="code-header">
-        <span class="code-lang">Python · Sistema especialista simplificado</span>
-        <div class="code-dots">
-          <div class="dot d-red"></div><div class="dot d-amber"></div><div class="dot d-green"></div>
-        </div>
-      </div>
-      <pre><span class="cm"># Base de conhecimento: regras de produção</span>
-<span class="cm"># Formato: (premissa, conclusão) — exatamente p → q do Iezzi</span>
-
-regras <span class="op">=</span> [
-    <span class="cm"># (p,                              q)</span>
-    (<span class="str">"febre AND tosse"</span>,              <span class="str">"possível gripe"</span>),
-    (<span class="str">"febre AND manchas_vermelhas"</span>,   <span class="str">"possível sarampo"</span>),
-    (<span class="str">"tosse AND falta_ar"</span>,            <span class="str">"avaliar pneumonia"</span>),
-    (<span class="str">"possível gripe AND corpo_dores"</span>, <span class="str">"protocolo: oseltamivir"</span>),
-]
-
-<span class="kw">def</span> <span class="fn">inferir</span>(fatos: set, regras: list) <span class="op">-></span> set:
-    <span class="str">"""Motor de inferência encadeamento-para-frente (forward chaining)."""</span>
-    novos_fatos <span class="op">=</span> <span class="fn">set</span>()
-    <span class="kw">for</span> premissa, conclusao <span class="kw">in</span> regras:
-        condicoes <span class="op">=</span> premissa.<span class="fn">split</span>(<span class="str">" AND "</span>)
-        <span class="cm"># Modus Ponens: se TODAS as condições estão nos fatos → adiciona conclusão</span>
-        <span class="kw">if</span> <span class="fn">all</span>(c <span class="kw">in</span> fatos <span class="kw">for</span> c <span class="kw">in</span> condicoes):
-            novos_fatos.<span class="fn">add</span>(conclusao)
-    <span class="kw">return</span> fatos <span class="op">|</span> novos_fatos
-
-<span class="cm"># Paciente com febre, tosse e dores no corpo</span>
-fatos_iniciais <span class="op">=</span> {<span class="str">"febre"</span>, <span class="str">"tosse"</span>, <span class="str">"corpo_dores"</span>}
-diagnostico   <span class="op">=</span> <span class="fn">inferir</span>(fatos_iniciais, regras)
-<span class="fn">print</span>(diagnostico)
-<span class="cm"># → {'febre','tosse','corpo_dores','possível gripe','protocolo: oseltamivir'}</span></pre>
-    </div>
-
-    <p>
-      O <code>all(c in fatos for c in condicoes)</code> é, literalmente, uma conjunção lógica — o <strong>∧ do Iezzi traduzido para Python</strong>. O laço inteiro é um motor de Modus Ponens aplicado em cadeia.
-    </p>
-
-    <div class="callout cyan">
-      <div class="callout-label">Você sabia?</div>
-      <p>
-        O motor de inferência do CLIPS, ainda usado em sistemas industriais hoje, é formalmente equivalente a um provador automático de teoremas proposicionais. Cada "regra de produção" é uma cláusula de Horn — um subconjunto da lógica de primeira ordem que inclui a proposicional do Iezzi.
-      </p>
-    </div>
-
-    <div class="section-divider"><span>// 06 · llms e lógica difusa</span></div>
-
-    <h2>E os LLMs? Eles abandonaram a lógica?</h2>
-
-    <p>
-      A pergunta é legítima: modelos de linguagem como GPT e Claude não operam com proposições binárias explícitas. Eles trabalham com <strong>distribuições de probabilidade sobre tokens</strong>. Então o Iezzi ainda é relevante?
-    </p>
-
-    <p>
-      A resposta é sim — de duas formas distintas:
-    </p>
-
-    <h3>1. Lógica difusa: proposições com grau de verdade</h3>
-
-    <p>
-      A <strong>lógica difusa</strong> (fuzzy logic) de Lotfi Zadeh generaliza a proposição binária do Iezzi para um intervalo contínuo <code>[0, 1]</code>. Um LLM atribuindo 73% de probabilidade a uma palavra está fazendo exatamente isso: a proposição <em>"a próxima palavra é 'neural'"</em> tem valor de verdade 0,73 — nem V nem F, mas algo entre.
-    </p>
-
-    <div class="code-block">
-      <div class="code-header">
-        <span class="code-lang">Python · Implicação difusa</span>
-        <div class="code-dots">
-          <div class="dot d-red"></div><div class="dot d-amber"></div><div class="dot d-green"></div>
-        </div>
-      </div>
-      <pre><span class="cm"># Lógica clássica (Iezzi): binária</span>
-p_classico <span class="op">=</span> <span class="kw">True</span>   <span class="cm"># V ou F — sem meio-termo</span>
-
-<span class="cm"># Lógica difusa (LLMs): grau de pertinência</span>
-p_difuso <span class="op">=</span> <span class="num">0.73</span>    <span class="cm"># 73% verdadeiro</span>
-q_difuso <span class="op">=</span> <span class="num">0.81</span>    <span class="cm"># 81% verdadeiro</span>
-
-<span class="cm"># Conectivos difusos (equivalentes aos do Iezzi)</span>
-p_AND_q <span class="op">=</span> <span class="fn">min</span>(p_difuso, q_difuso)   <span class="cm"># ∧ difuso = mínimo</span>
-p_OR_q  <span class="op">=</span> <span class="fn">max</span>(p_difuso, q_difuso)   <span class="cm"># ∨ difuso = máximo</span>
-NAO_p   <span class="op">=</span> <span class="num">1</span> <span class="op">-</span> p_difuso              <span class="cm"># ¬ difuso = complemento</span>
-
-<span class="cm"># Implicação de Łukasiewicz: p → q = min(1, 1 - p + q)</span>
-impl_difusa <span class="op">=</span> <span class="fn">min</span>(<span class="num">1.0</span>, <span class="num">1.0</span> <span class="op">-</span> p_difuso <span class="op">+</span> q_difuso)
-
-<span class="fn">print</span>(<span class="str">f"p ∧ q = {p_AND_q:.2f}"</span>)   <span class="cm"># 0.73</span>
-<span class="fn">print</span>(<span class="str">f"p ∨ q = {p_OR_q:.2f}"</span>)    <span class="cm"># 0.81</span>
-<span class="fn">print</span>(<span class="str">f"p → q = {impl_difusa:.2f}"</span>) <span class="cm"># 1.00 (alta compatibilidade)</span></pre>
-    </div>
-
-    <h3>2. Chain-of-thought como prova formal</h3>
-
-    <p>
-      Quando forçamos um LLM a <em>"pensar passo a passo"</em> via chain-of-thought prompting, estamos essencialmente pedindo que ele construa uma <strong>prova formal</strong> no sentido do Iezzi: uma sequência de proposições onde cada uma decorre logicamente da anterior. Os erros de raciocínio dos LLMs frequentemente são <em>falácias lógicas</em> — violações das leis de inferência que o Iezzi cataloga.
-    </p>
-
-    <blockquote>
-      <p>A diferença entre um LLM que alucina e um que raciocina é, em parte, a diferença entre gerar tokens plausíveis e gerar tokens que satisfazem as leis da lógica proposicional.</p>
-      <cite>— Paráfrase de Murray Shanahan, "Talking About Large Language Models", 2023</cite>
-    </blockquote>
-
-    <div class="section-divider"><span>// 07 · conclusão</span></div>
-
-    <h2>O Iezzi como fundação invisível da IA</h2>
-
-    <p>
-      A lógica proposicional não é um capítulo opcional do ensino médio. É a <strong>linguagem formal em que qualquer sistema que "decide" precisa, em algum nível, operar</strong>. O neurônio artificial, a árvore de decisão, o sistema especialista, o modelo difuso e até o LLM que raciocina encadeado — todos são, em graus diferentes, instâncias das estruturas que Iezzi, Murakami e Dolce descrevem com rigor elegante nas primeiras páginas do seu volume 1.
-    </p>
-
-    <p>
-      Da próxima vez que você ver uma tabela-verdade, lembre: aqueles quatro valores não são apenas exercícios de prova. São o contrato formal que define quando uma máquina tem o direito lógico de afirmar algo. E isso, em 2026, vale bilhões de dólares.
-    </p>
-
-    <div class="callout purple">
-      <div class="callout-label">Próximos passos</div>
-      <p>
-        Quer aprofundar? Estude <strong>lógica de primeira ordem</strong> (predicados e quantificadores) — é a extensão natural da proposicional e a base da IA simbólica clássica. O livro <em>Inteligência Artificial</em> de Russell &amp; Norvig dedica três capítulos ao tema, partindo exatamente do ponto onde o Iezzi termina.
-      </p>
-    </div>
-
-    <!-- Autor -->
-    <div class="author-card">
-      <div class="author-avatar">AM</div>
-      <div>
-        <div class="author-name">Ana Melo</div>
-        <div class="author-role">Pesquisadora em IA · Mestre em Ciência da Computação (UFPE)</div>
-        <p class="author-bio">Escreve sobre fundamentos matemáticos de inteligência artificial, com foco em tornar conceitos formais acessíveis para estudantes e desenvolvedores. Contribuidora de projetos open-source em inferência probabilística.</p>
-      </div>
-    </div>
-
-    <!-- Artigos relacionados -->
-    <div class="related-section">
-      <h3>Continue lendo</h3>
-      <div class="related-grid">
-        <a href="#" class="related-card">
-          <div class="related-tag">Fundamentos</div>
-          <div class="related-title">Álgebra Linear: por que matrizes movem o mundo da IA</div>
-        </a>
-        <a href="#" class="related-card">
-          <div class="related-tag">Deep Learning</div>
-          <div class="related-title">Como o Raciocínio em Cadeia muda tudo nos LLMs</div>
-        </a>
-        <a href="#" class="related-card">
-          <div class="related-tag">Agentes</div>
-          <div class="related-title">Agentes autônomos: de sistemas especialistas ao ReAct</div>
-        </a>
-      </div>
-    </div>
-
-  </article>
-
-  <!-- ── RODAPÉ ─────────────────────────────────────────── -->
-  <footer>
-    <p>© 2026 TechAI_Lab · <a href="index.html">Início</a> · <a href="#">Privacidade</a> · <a href="#">Termos</a></p>
-  </footer>
-
-  <!-- ── JAVASCRIPT ──────────────────────────────────────── -->
-  <script>
-    const bar = document.getElementById('progress');
-    window.addEventListener('scroll', () => {
-      const total = document.body.scrollHeight - window.innerHeight;
-      const pct   = total > 0 ? (window.scrollY / total) * 100 : 0;
-      bar.style.width = pct.toFixed(1) + '%';
-    });
-  </script>
 
 </body>
 </html>
