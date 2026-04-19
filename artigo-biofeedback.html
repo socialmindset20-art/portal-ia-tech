@@ -3,111 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Biofeedback e Código: Programando em Estado de Flow — TechAI_Lab</title>
-  <meta name="description" content="Como usar biofeedback e autorregulação para atingir o estado de flow na programação e sustentar o foco profundo." />
+  <title>Biofeedback e Código: Programando em Flow — TechAI_Lab</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
 
   <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg-color: #0d1117;
-      --card-bg: #161b22;
-      --text-main: #e6edf3;
-      --text-dim: #8b949e;
-      --accent: #3fb950; /* Verde para Biohacking/Performance */
-      --border: #30363d;
-      --max-width: 800px;
+      --bg: #0a0a0f; --bg2: #0f0f1a; --green: #3fb950;
+      --text: #e2e8f0; --muted: #94a3b8; --border: #1e2a3a;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      font-family: 'Inter', -apple-system, system-ui, sans-serif;
-      line-height: 1.8;
-    }
-    .container { max-width: var(--max-width); margin: 0 auto; padding: 60px 20px; }
-    header { margin-bottom: 50px; border-bottom: 1px solid var(--border); padding-bottom: 30px; }
-    .back-link { display: inline-block; color: var(--accent); text-decoration: none; font-size: 0.9rem; margin-bottom: 15px; font-weight: 500; }
-    h1 { font-size: 2.5rem; line-height: 1.2; margin-bottom: 15px; color: #fff; letter-spacing: -0.02em; }
-    .metadata { color: var(--text-dim); font-size: 0.95rem; }
-    
-    .content { font-size: 1.1rem; color: #d1d7dd; text-align: justify; }
-    .content p { margin-bottom: 25px; }
-    .content h2 { margin: 40px 0 20px; color: #fff; font-size: 1.6rem; border-left: 4px solid var(--accent); padding-left: 15px; }
-    .content h3 { margin: 30px 0 15px; color: var(--accent); font-size: 1.3rem; }
-    .content ul, .content ol { margin-bottom: 25px; padding-left: 20px; }
-    .content li { margin-bottom: 12px; }
-
-    .flow-box {
-      background: rgba(63, 185, 80, 0.05);
-      border: 1px dashed var(--accent);
-      padding: 25px;
-      border-radius: 8px;
-      margin: 30px 0;
-    }
-
-    #readingProgressBar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0%; z-index: 1000; }
-    footer { margin-top: 60px; padding: 40px 0; border-top: 1px solid var(--border); color: var(--text-dim); text-align: center; font-size: 0.9rem; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.8; overflow-x: hidden; }
+    .reading-progress { position: fixed; top: 0; left: 0; right: 0; height: 4px; background: rgba(255,255,255,0.05); z-index: 220; }
+    .reading-progress__bar { height: 100%; width: 0%; background: var(--green); box-shadow: 0 0 18px rgba(63, 185, 80, 0.4); }
+    .to-top { position: fixed; right: 18px; bottom: 18px; z-index: 210; display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; padding: 10px 12px; border-radius: 14px; border: 1px solid rgba(63, 185, 80, 0.2); background: rgba(15,15,26,0.8); color: var(--text); font-size: 13px; font-weight: 650; text-decoration: none; opacity: 0; transform: translateY(10px); transition: all 0.25s ease; cursor: pointer; backdrop-filter: blur(10px); }
+    .to-top.is-visible { opacity: 1; transform: translateY(0); }
+    .container { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+    .back-link { color: var(--green); text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 3rem; }
+    .article-tag { color: var(--green); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+    h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.1; margin-bottom: 1.5rem; color: var(--green); }
+    .meta { display: flex; gap: 20px; color: var(--muted); font-size: 14px; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 3rem; }
+    h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; margin: 3.5rem 0 1.5rem; color: #fff; border-left: 4px solid var(--green); padding-left: 10px; }
+    p { margin-bottom: 1.5rem; font-size: 1.15rem; color: var(--muted); text-align: justify; }
+    .highlight-box { background: var(--bg2); border-left: 4px solid var(--green); padding: 2rem; margin: 2.5rem 0; border-radius: 0 16px 16px 0; }
+    footer { text-align: center; padding: 5rem 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; margin-top: 5rem; }
   </style>
 </head>
 <body>
-  <div id="readingProgressBar"></div>
+  <div class="reading-progress"><div class="reading-progress__bar" id="readingProgressBar"></div></div>
+  <button class="to-top" id="toTopBtn">Topo</button>
 
   <div class="container">
-    <header>
-      <a href="index.html" class="back-link">← Voltar ao TechAI_Lab</a>
-      <h1>Biofeedback e Código: Programando em Estado de Flow</h1>
-      <div class="metadata">Biohacking • Performance Cognitiva • Deep Work</div>
-    </header>
+    <a href="index.html" class="back-link">← Voltar para a Home</a>
+    <div class="article-tag">Performance Humana</div>
+    <h1>Biofeedback e Código: Estado de Flow</h1>
+    <div class="meta"><span>✍️ TechAI_Lab Team</span><span>⏱️ 7 min de leitura</span></div>
 
-    <article class="content">
-      <p>Programar em estado de <strong>flow</strong> é trabalhar com foco profundo, pouca fricção e feedback rápido o suficiente para manter o cérebro engajado. O biofeedback entra como uma camada extra de autorregulação, ajudando a perceber estresse, excitação e atenção para sustentar esse estado por mais tempo.</p>
+    <p>Programar em estado de <strong>flow</strong> é trabalhar com foco profundo e feedback rápido. O biofeedback ajuda a perceber sinais de estresse para sustentar esse estado.</p>
 
-      <h2>O que é Flow</h2>
-      <p>Flow é um estado de concentração total em que a pessoa fica totalmente absorvida pela tarefa, com menos distrações, noção alterada do tempo e sensação de progresso contínuo. Esse estado tende a aparecer quando há desafio suficiente para engajar, mas não tanto a ponto de causar paralisia.</p>
-      <p>Na programação, isso costuma acontecer quando o problema está bem definido, o ambiente está organizado e o retorno sobre cada ação é rápido. Quanto menos interrupções e mudanças de contexto, maiores as chances de manter esse fluxo mental.</p>
+    <h2>O que é Flow</h2>
+    <p>É a absorção total na tarefa. Na programação, acontece quando o problema desafia a medida certa e o retorno sobre cada linha de código é imediato.</p>
 
-      <h2>Onde entra o Biofeedback</h2>
-      <p>Biofeedback é uma técnica de autorregulação que usa sinais fisiológicos medidos por instrumentos para ensinar a pessoa a ajustar seu próprio estado corporal. Os sinais mais comuns incluem variabilidade cardíaca (HRV), resposta galvânica da pele e atividade cerebral.</p>
-      <p>Aplicado ao trabalho intelectual, o biofeedback pode ajudar a identificar quando a mente está acelerada, dispersa ou sob estresse demais para sustentar concentração estável. Isso é útil porque o flow não depende só de disciplina; ele também depende de um estado físico e emocional compatível com foco sustentado.</p>
+    <div class="highlight-box">
+      <strong>Biofeedback:</strong> Uso de sinais (HRV, respiração) para ajustar seu estado corporal e criar um ambiente favorável ao foco sustentado.
+    </div>
 
-      <h2>Programar para entrar em Flow</h2>
-      <p>Para programar em flow, o primeiro passo é reduzir ruído. Isso significa definir uma tarefa pequena e clara, eliminar notificações e usar blocos de tempo protegidos para execução profunda.</p>
-      <p>Também ajuda quebrar o trabalho em ciclos curtos de <em>“escreve, testa, corrige”</em>. Esse tipo de feedback imediato mantém a mente engajada porque mostra avanço rápido e reduz a sensação de incerteza.</p>
+    <h2>Protocolo de Trabalho</h2>
+    <p>1. Escolha tarefa única. 2. Elimine notificações. 3. Respire por 2 minutos. 4. Programe em blocos de 60 min. 5. Use testes como feedback.</p>
 
-      <h2>Como usar Biofeedback no dia a dia</h2>
-      <p>Uma forma prática é observar sinais corporais antes e durante a sessão de programação. Respiração curta, tensão muscular e aumento de agitação mental costumam indicar que o sistema nervoso não está no melhor ponto para foco estável.</p>
-      <p>Com dispositivos ou apps de biofeedback, você pode treinar respiração guiada ou coerência cardíaca antes de iniciar tarefas mais exigentes. A ideia não é “forçar” concentração, mas criar um estado interno mais favorável para o trabalho profundo.</p>
-
-      <div class="flow-box">
-        <h3>Protocolo de Fluxo TechAI_Lab</h3>
-        <ol>
-          <li>Escolha uma tarefa única e bem definida.</li>
-          <li>Remova distrações visíveis e digitais.</li>
-          <li>Faça 2 a 5 minutos de autorregulação (respiração lenta).</li>
-          <li>Programe em blocos de 25 a 60 minutos.</li>
-          <li>Use testes e logs como feedback imediato.</li>
-          <li>Pare para reavaliar energia e foco.</li>
-        </ol>
-      </div>
-
-      <h2>Limites e Realidade</h2>
-      <p>Flow não é um botão que se liga à vontade, e biofeedback não substitui descanso, sono ou organização do trabalho. O objetivo é aumentar a probabilidade de entrar nesse estado através da combinação de três pilares: <strong>tarefa certa, ambiente certo e estado corporal regulado.</strong></p>
-
-      <p style="text-align: center; color: var(--accent); font-weight: bold; margin-top: 40px;">
-        Quando esses elementos se alinham, programar deixa de parecer uma sequência de interrupções e passa a parecer um processo contínuo de criação.
-      </p>
-    </article>
-
-    <footer>
-      © 2026 TechAI_Lab - Otimizando o hardware e o software mental.
-    </footer>
+    <footer>© 2026 TechAI_Lab - Alta performance mental.</footer>
   </div>
-
   <script>
+    const progressBar = document.getElementById('readingProgressBar');
+    const toTopBtn = document.getElementById('toTopBtn');
     window.addEventListener('scroll', () => {
       const doc = document.documentElement;
       const progress = (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100;
-      document.getElementById('readingProgressBar').style.width = progress + '%';
+      progressBar.style.width = progress + '%';
+      if (doc.scrollTop > 400) toTopBtn.classList.add('is-visible');
+      else toTopBtn.classList.remove('is-visible');
     });
+    toTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   </script>
 </body>
 </html>
